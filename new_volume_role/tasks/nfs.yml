@@ -1,0 +1,8 @@
+- name: Ensure NFS server is running
+  na_ontap_nfs_service:
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    vserver: "{{ vserver }}"
+    state: started
+

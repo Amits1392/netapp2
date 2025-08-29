@@ -1,0 +1,22 @@
+- name: Create LUN if not exists
+  na_ontap_lun:
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    vserver: "{{ vserver }}"
+    state: present
+    name: "{{ lun_name }}"
+    volume: "{{ volume_name }}"
+    size: "{{ lun_size }}"
+    size_unit: "{{ lun_size_unit }}"
+
+- name: Map LUN to host
+  na_ontap_lun_map:
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    vserver: "{{ vserver }}"
+    state: present
+    name: "{{ lun_name }}"
+    host: "{{ hostgroup_name }}"
+

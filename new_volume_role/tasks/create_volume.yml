@@ -1,0 +1,23 @@
+---
+- name: Create FlexVol if not exists
+  netapp.ontap.na_ontap_volume:
+    state: present
+    name: "{{ volume_name }}"
+    aggregate_name: "{{ aggregate_name }}"
+    vserver: "{{ vserver }}"
+    size: "{{ volume_size }}"
+    size_unit: "{{ size_unit }}"
+    is_infinite: false
+    space_guarantee: "none"
+    export_policy: "default"
+    tiering_policy: none
+    percent_snapshot_space: 0
+    snapshot_policy: null
+    unix_permissions: "755"
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    use_rest: always
+    validate_certs: false
+    wait_for_completion: true
+

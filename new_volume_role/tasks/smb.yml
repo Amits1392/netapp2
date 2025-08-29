@@ -1,0 +1,17 @@
+- name: Check if SMB server is running
+  na_ontap_cifs_server_info:
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    vserver: "{{ vserver }}"
+  register: smb_info
+
+- name: Start SMB server if not running
+  na_ontap_cifs_server:
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    vserver: "{{ vserver }}"
+    state: started
+  when: smb_info.servers[0].status != "running"
+

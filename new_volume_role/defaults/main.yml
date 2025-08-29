@@ -1,0 +1,24 @@
+netapp_hostname: "192.168.0.101"
+netapp_username: "admin"
+netapp_password: "Netapp1!"
+vserver: "ansibleSVM"
+aggregate: "ansible_aggr"
+volume_name: "ansibleVolume12"
+volume_size: 100
+size_unit: "gb"
+is_infinite: false
+space_guarantee: none
+tiering_policy: auto
+export_policy: "default"
+percent_snapshot_space: 60
+snapshot_policy: "default"
+unix_permissions: 777
+qtree_name: "data"
+nfs_enabled: true
+smb_enabled: true
+smb_server_name: "SMB_Server"
+lun_name: "lun1"
+lun_size: 50
+lun_size_unit: "gb"
+hostgroup_name: "host1"
+

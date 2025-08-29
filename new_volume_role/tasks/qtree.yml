@@ -1,0 +1,10 @@
+- name: Create Qtree if missing
+  na_ontap_qtree:
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    volume: "{{ volume_name }}"
+    vserver: "{{ vserver }}"
+    name: "{{ qtree_name }}"
+    state: present
+
