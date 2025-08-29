@@ -1,0 +1,30 @@
+
+# defaults file for netapp_volume_role
+#
+---
+# Default variables for NetApp automation
+netapp_host: "192.168.0.101"
+netapp_user: "admin"
+netapp_pass: "Netapp1!"
+svm_name: "svm1_cluster1"
+
+# Volume variables
+volume_name: "volamit"
+aggregate_name: "cluster1_01_SSD_1"
+volume_size: 100
+size_unit: gb
+junction_path: "/volamit"
+export_policy: "default"
+comment: "ansible created volume"
+
+# Qtree variables
+qtree_name: "qtree1"
+qtree_security_style: "unix"   # unix, ntfs, or mixed
+qtree_permissions: "755"
+
+# SMB share variables (optional)
+smb_share_name: "share1"
+smb_description: "Ansible created SMB share"
+nfs_enabled: true
+smb_enabled: false
+

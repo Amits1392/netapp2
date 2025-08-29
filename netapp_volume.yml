@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  collections:
+    - netapp.ontap   # instead of community.general (since you are using na_ontap modules)
+
+  vars:
+    volume_name: "vol1001"
+    qtree_name: "data"
+    nfs_enabled: true
+    smb_enabled: false
+
+  roles:
+    - role: netapp_volume
+

@@ -1,0 +1,113 @@
+---
+# 1. Check if aggregate exists
+- name: Check aggregate
+  netapp.ontap.na_ontap_rest_info:
+    gather_subset:
+      - storage/aggregates
+    parameters:
+      name: "{{ aggregate_name }}"
+    hostname: "{{ netapp_host }}"
+    username: "{{ netapp_user }}"
+    password: "{{ netapp_pass }}"
+    https: true
+    validate_certs: false
+  register: aggr_info
+
+- name: Create aggregate if not exists
+  netapp.ontap.na_ontap_aggregate:
+    state: present
+    name: "{{ aggregate_name }}"
+    nodes: "{{ node_name }}"
+    disk_count: 3
+    hostname: "{{ netapp_host }}"
+    username: "{{ netapp_user }}"
+    password: "{{ netapp_pass }}"
+    https: true
+    validate_certs: false
+  when: aggr_info.records | length == 0
+
+# 2. Create volume
+- name: Create FlexVol via REST
+  netapp.ontap.na_ontap_volume:
+    state: present
+    name: "{{ volume_name }}"
+    aggregate_name: "{{ aggregate_name }}"
+    size: 5
+    size_unit: gb
+    svm_name: "{{ svm_name }}"
+    policy: default
+    junction_path: "/{{ volume_name }}"
+    volume_security_style: unix
+    hostname: "{{ netapp_host }}"
+    username: "{{ netapp_user }}"
+    password: "{{ netapp_pass }}"
+    https: true
+    validate_certs: false
+
+# 3. Wait until volume is online
+- name: Wait for volume to come online
+  retries: 10
+  delay: 5
+  until: vol_status.records[0].state == "online"
+  block:
+    - name: Get volume state
+      netapp.ontap.na_ontap_rest_info:
+        gather_subset:
+          - storage/volumes
+        parameters:
+          name: "{{ volume_name }}"
+          svm.name: "{{ svm_name }}"
+        hostname: "{{ netapp_host }}"
+        username: "{{ netapp_user }}"
+        password: "{{ netapp_pass }}"
+        https: true
+        validate_certs: false
+      register: vol_status
+
+# 4. Create Qtree
+- name: Create qtree
+  netapp.ontap.na_ontap_qtree:
+    state: present
+    name: "{{ qtree_name }}"
+    flexvol_name: "{{ volume_name }}"
+    vserver: "{{ svm_name }}"
+    security_style: unix
+    hostname: "{{ netapp_host }}"
+    username: "{{ netapp_user }}"
+    password: "{{ netapp_pass }}"
+    https: true
+    validate_certs: false
+
+# 5. Configure NFS
+- name: Enable NFS export policy
+  netapp.ontap.na_ontap_export_policy_rule:
+    state: present
+    name: default
+    vserver: "{{ svm_name }}"
+    client_match: 0.0.0.0/0
+    ro_rule: sys
+    rw_rule: sys
+    protocol: nfs
+    super_user_security: sys
+    allow_suid: true
+    hostname: "{{ netapp_host }}"
+    username: "{{ netapp_user }}"
+    password: "{{ netapp_pass }}"
+    https: true
+    validate_certs: false
+  when: nfs_enabled | default(false)
+
+# 6. Configure SMB
+- name: Enable SMB share
+  netapp.ontap.na_ontap_cifs_share:
+    state: present
+    name: "{{ volume_name }}"
+    path: "/{{ volume_name }}"
+    vserver: "{{ svm_name }}"
+    hostname: "{{ netapp_host }}"
+    username: "{{ netapp_user }}"
+    password: "{{ netapp_pass }}"
+    https: true
+    validate_certs: false
+  when: smb_enabled | default(false)
+
