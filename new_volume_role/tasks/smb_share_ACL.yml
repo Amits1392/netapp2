@@ -1,0 +1,32 @@
+---
+- name: Create CIFS share acl
+  netapp.ontap.na_ontap_cifs_acl:
+    state: absent
+    share_name: "{{ smb_share_name }}"
+    user_or_group: "Everyone"
+    permission: "no_access"
+    vserver: "{{ vserver }}"
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    use_rest: always
+    validate_certs: false
+  when: create_smb_acl | default(false)
+
+
+
+- name: Configure CIFS share ACL
+  netapp.ontap.na_ontap_cifs_acl:
+    state: present
+    share_name: "{{ smb_share_name }}"        # Name of the CIFS share
+    user_or_group: "{{ smb_user_or_group }}" # User or group name
+    permission: "{{ smb_permission | default('full_control') }}"  # ACL permission
+    type: windows                            # Optional: windows/unix_user/unix_group
+    vserver: "{{ vserver }}"
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    use_rest: always
+    validate_certs: false
+  when: create_smb_acl | default(false)
+

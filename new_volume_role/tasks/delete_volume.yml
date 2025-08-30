@@ -1,13 +1,13 @@
-- name: Apply snapshot policy to volume
-  netapp.ontap.na_ontap_volume:
+- name: Delete NetApp volume
+  na_ontap_volume:
     hostname: "{{ netapp_hostname }}"
     username: "{{ netapp_username }}"
     password: "{{ netapp_password }}"
     vserver: "{{ vserver }}"
     name: "{{ volume_name }}"
-    snapshot_policy: "{{ snapshot_policy_name }}"
+    state: absent
     use_rest: always
     https: true
     validate_certs: false
-  when: enable_snapshot | default(false)
+  when: delete_volume | default(false)
 

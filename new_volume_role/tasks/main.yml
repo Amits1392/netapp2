@@ -1,14 +1,14 @@
+- name: Include snapshot policy creation tasks
+  include_tasks: snapshot_policy.yml
+  when: create_snapshot_policy | default(false)
+
 - name: Include volume creation tasks
   include_tasks: create_volume.yml
   when: create_volume | default(false)
 
-- name: Include volume deletion tasks
-  include_tasks: delete_volume.yml
-  when: delete_volume | default(false)
-
-- name: Include qtree tasks
-  include_tasks: qtree.yml
-  when: create_qtree | default(false)
+- name: Include snapshot tasks
+  include_tasks: snapshot.yml
+  when: enable_snapshot | default(false)
 
 - name: Include NFS tasks
   include_tasks: nfs.yml
@@ -16,12 +16,28 @@
 
 - name: Include SMB tasks
   include_tasks: smb.yml
-  when: enable_smb | default(false)
+  when: manage_cifs_server | default(false)
+
+
+- name: Include SMB share create tasks
+  include_tasks: smb_share_create.yml
+  when: create_smb_share | default(false)
+
+- name: Include SMB share access control tasks
+  include_tasks: smb_share_ACL.yml
+  when: create_smb_acl | default(false)
+
+
+
+- name: Include qtree tasks
+  include_tasks: qtree.yml
+  when: create_qtree | default(false)
 
 - name: Include LUN tasks
   include_tasks: lun.yml
   when: create_lun | default(false)
 
-- name: Include snapshot tasks
-  include_tasks: snapshot.yml
-  when: enable_snapshot | default(false)
+- name: Include volume deletion tasks
+  include_tasks: delete_volume.yml
+  when: delete_volume | default(false)
+

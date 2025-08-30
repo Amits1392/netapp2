@@ -1,8 +1,20 @@
-- name: Ensure NFS server is running
-  na_ontap_nfs_service:
+- name: Change NFS status
+  netapp.ontap.na_ontap_nfs:
+    state: present
+    service_state: started
+    vserver: "{{ vserver }}"
+    nfsv3: enabled
+    nfsv4: enabled
+    nfsv41: enabled
+    tcp: enabled
+    udp: enabled
+    vstorage_state: disabled
+    nfsv4_id_domain: example.com
     hostname: "{{ netapp_hostname }}"
     username: "{{ netapp_username }}"
     password: "{{ netapp_password }}"
-    vserver: "{{ vserver }}"
-    state: started
+    https: true
+    validate_certs: false
+    use_rest: always
+  when: enable_nfs | default(false)
 

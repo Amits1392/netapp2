@@ -1,10 +1,16 @@
 - name: Create Qtree if missing
-  na_ontap_qtree:
+  netapp.ontap.na_ontap_qtree:
     hostname: "{{ netapp_hostname }}"
     username: "{{ netapp_username }}"
     password: "{{ netapp_password }}"
-    volume: "{{ volume_name }}"
     vserver: "{{ vserver }}"
+    flexvol_name: "{{ volume_name }}"
     name: "{{ qtree_name }}"
     state: present
+    security_style: unix       # unix, ntfs, or mixed
+    export_policy: default     # optional
+    https: true
+    validate_certs: false
+    use_rest: always
+  when: create_qtree | default(false)
 

@@ -1,0 +1,43 @@
+- name: NetApp Volume Creation Only
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  collections:
+    - netapp.ontap
+    - community.general
+
+  vars:
+    netapp_hostname: "192.168.0.101"
+    netapp_username: "admin"
+    netapp_password: "Netapp1!"
+    vserver: "test_svm"
+    qtree_name: "qtreetest"
+    volume_name: "vhouston1"
+    aggregate_name: "cluster1_01_SSD_1"
+    volume_size: 5
+    size_unit: "gb"
+    snapshot_policy_name: "test_snap_policy"
+    smb_share_name: "testShare"
+    smb_user_or_group: "BUILTIN\\Administrators"
+
+
+    cifs_server_name: "data2"
+    id_domain: "DEMO.NETAPP.COM"
+    domain_login: "Administrator"
+    domain_pwd: "Netapp1!"
+
+    # Feature control flags
+    create_snapshot_policy: true
+    create_volume: true
+    enable_snapshot: true
+    enable_nfs: true
+    create_qtree: true
+    manage_cifs_server: true
+    create_smb_share: true
+    create_smb_acl: true
+    create_lun: false
+    delete_volume: false
+
+  roles:
+    - role: /netapproles/new_volume_role
+

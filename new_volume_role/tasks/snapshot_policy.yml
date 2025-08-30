@@ -1,0 +1,17 @@
+- name: Ensure snapshot policy exists
+  netapp.ontap.na_ontap_snapshot_policy:
+    state: present
+    name: "{{ snapshot_policy_name }}"
+    vserver: "{{ vserver }}"
+    schedule: ['daily', 'hourly']
+    prefix: ['daily', 'hourly']
+    count: [5, 2]
+    enabled: true
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    hostname: "{{ netapp_hostname }}"
+    https: true
+    validate_certs: false
+    use_rest: true
+  when: create_snapshot_policy | default(false)
+
