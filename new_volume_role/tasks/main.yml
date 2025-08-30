@@ -2,6 +2,16 @@
   include_tasks: snapshot_policy.yml
   when: create_snapshot_policy | default(false)
 
+- name: Include Export policy creation tasks
+  include_tasks: export_policy_create.yml
+  when: create_export_policy | default(false)
+
+- name: Include Export policy Rule creation tasks
+  include_tasks: export_policy_rule.yml
+  when: create_export_policy_rule | default(false)
+
+
+
 - name: Include volume creation tasks
   include_tasks: create_volume.yml
   when: create_volume | default(false)

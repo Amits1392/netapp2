@@ -8,7 +8,7 @@
     size_unit: "{{ size_unit }}"
     is_infinite: false
     space_guarantee: "none"
-    export_policy: "default"
+    export_policy: "{{ export_policy_name }}"
     tiering_policy: none
     percent_snapshot_space: 5
     snapshot_policy: "{{ snapshot_policy_name | default(omit) }}"
